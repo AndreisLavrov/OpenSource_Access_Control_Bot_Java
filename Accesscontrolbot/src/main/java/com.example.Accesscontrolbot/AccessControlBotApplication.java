@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class AccessControlBotApplication {
 
 	public static void main(String[] args) {
-
 		SpringApplication.run(AccessControlBotApplication.class, args);
 	}
 

@@ -1,4 +1,4 @@
-package com.example.Accesscontrolbot.Bot;
+package com.example.Accesscontrolbot.bot;
 
 
 import org.springframework.beans.factory.annotation.Value;
@@ -16,9 +16,9 @@ import org.slf4j.LoggerFactory;
 
 
 @Component
-public class Admin_Bot extends TelegramLongPollingBot {
+public class AdminBot extends TelegramLongPollingBot {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Admin_Bot.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AdminBot.class);
 
     private static final String START = "/start";
     private static final String HELP = "/help";
@@ -72,7 +72,7 @@ public class Admin_Bot extends TelegramLongPollingBot {
         var text = """
                 Пишите @andrei_lavrov
                 """;
-        sendMessage(chatId, formattedText);
+        sendMessage(chatId, text);
     }
 
     private void sendWelcomeMessage(String chatId) {

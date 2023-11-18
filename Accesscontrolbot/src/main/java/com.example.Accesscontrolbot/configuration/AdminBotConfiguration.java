@@ -1,14 +1,13 @@
 package com.example.Accesscontrolbot.configuration;
 
-import com.example.Accesscontrolbot.Bot.Admin_Bot;
+import com.example.Accesscontrolbot.bot.AdminBot;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 @Configuration
-public class Admin_Bot_Configuration {
+public class AdminBotConfiguration {
 
     @Bean
     public TelegramBotsApi telegramBotsApi() throws Exception {
@@ -16,7 +15,7 @@ public class Admin_Bot_Configuration {
     }
 
     @Bean
-    public Admin_Bot myBot() {
-        return new Admin_Bot();
+    public AdminBot myBot() {
+        return new AdminBot();
     }
 }
