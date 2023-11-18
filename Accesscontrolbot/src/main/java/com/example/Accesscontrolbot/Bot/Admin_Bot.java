@@ -22,25 +22,11 @@ public class Admin_Bot extends TelegramLongPollingBot {
 
     private static final String START = "/start";
     private static final String HELP = "/help";
-//
 
-//
-//    @Value("${bot.username}")
-//    private String username;
-//
-//    @Override
-//    public void onUpdateReceived(Update update) {
-//
-//    }
-//
-//    @Override
-//    public String getBotUsername() {
-//
-//        return username;
-//    }
 
     @Value("${bot.username}")
     private String username;
+
 
     @Value("${bot.token}")
     private String token;
@@ -74,7 +60,7 @@ public class Admin_Bot extends TelegramLongPollingBot {
         var text = """
                 Добро пожаловать в бот, %s!
                 
-                Другие команды: 
+                Другие команды:
                 /help - получение справки
                 """;
         var formattedText = String.format(text, userName);
@@ -101,25 +87,14 @@ public class Admin_Bot extends TelegramLongPollingBot {
 
         // Если пользователь нажал на кнопку, отправляем ему личное сообщение
         if (callbackQuery.getData().equals("welcome_button")) {
-            sendPrivateMessage(callbackQuery.getFrom().getId().toString(), "Привет!");
+            sendPrivateMessage(callbackQuery.getFrom().getId().toString());
         }
-
-//        // Опционально, редактировать сообщение, чтобы показать, что кнопка была нажата
-//        EditMessageText newMessage = new EditMessageText()
-//                .setChatId(chatId)
-//                .setMessageId(toIntExact(messageId))
-//                .setText("Спасибо за вашу реакцию!");
-//        try {
-//            execute(newMessage);
-//        } catch (TelegramApiException e) {
-//            e.printStackTrace();
-//        }
     }
 
-    private void sendPrivateMessage(String userId, String text) {
+    private void sendPrivateMessage(String userId) {
         SendMessage message = new SendMessage();
         message.setChatId(userId);
-        message.setText(text);
+        message.setText("Привет!");
         try {
             execute(message);
         } catch (TelegramApiException e) {
@@ -135,6 +110,7 @@ public class Admin_Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
+
         return token;
     }
 

@@ -14,8 +14,10 @@
 	<name>Access-control-bot</name>
 	<description>OS-Telegram-Bot</description>
 	<properties>
-		<java.version>21</java.version>
+		<java.version>21.0.1</java.version>
+		<start-class>com.example.Accesscontrolbot.AccessControlBotApplication</start-class>
 	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -50,13 +52,13 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.7.5</version> <!-- Используйте последнюю доступную версию -->
+			<version>1.7.5</version>
 		</dependency>
 
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.4.11</version> <!-- Используйте последнюю доступную версию -->
+			<version>1.4.11</version>
 		</dependency>
 
 	</dependencies>
