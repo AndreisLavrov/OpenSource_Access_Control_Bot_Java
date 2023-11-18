@@ -4,21 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7fa8a45f-2d5e-4394-96ac-7ec991270e45" name="Changes" comment="test bot">
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+    <list default="true" id="7fa8a45f-2d5e-4394-96ac-7ec991270e45" name="Changes" comment="test bot 18.11">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Access-control-bot/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/Accesscontrolbot/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Access-control-bot/.mvn/wrapper/maven-wrapper.jar" beforeDir="false" afterPath="$PROJECT_DIR$/Accesscontrolbot/.mvn/wrapper/maven-wrapper.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Access-control-bot/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Accesscontrolbot/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Access-control-bot/mvnw" beforeDir="false" afterPath="$PROJECT_DIR$/Accesscontrolbot/mvnw" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Access-control-bot/mvnw.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/Accesscontrolbot/mvnw.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Access-control-bot/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Accesscontrolbot/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Access-control-bot/src/main/java/com/example/Accesscontrolbot/AccessControlBotApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/Accesscontrolbot/src/main/java/com/example/Accesscontrolbot/AccessControlBotApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Access-control-bot/src/main/java/com/example/Accesscontrolbot/Bot/Admin_Bot.java" beforeDir="false" afterPath="$PROJECT_DIR$/Accesscontrolbot/src/main/java/com/example/Accesscontrolbot/Bot/Admin_Bot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Access-control-bot/src/main/java/com/example/Accesscontrolbot/configuration/Admin_Bot_Configuration.java" beforeDir="false" afterPath="$PROJECT_DIR$/Accesscontrolbot/src/main/java/com/example/Accesscontrolbot/configuration/Admin_Bot_Configuration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Access-control-bot/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Accesscontrolbot/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Access-control-bot/src/test/java/com/example/Accesscontrolbot/AccessControlBotApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/Accesscontrolbot/src/test/java/com/example/Accesscontrolbot/AccessControlBotApplicationTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Accesscontrolbot/src/main/java/com/example/Accesscontrolbot/exception/ServiceException.java" beforeDir="false" afterPath="$PROJECT_DIR$/Accesscontrolbot/src/main/java/com/example/Accesscontrolbot/exception/ServiceException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Accesscontrolbot/src/main/java/com/example/Accesscontrolbot/Bot/Admin_Bot.java" beforeDir="false" afterPath="$PROJECT_DIR$/Accesscontrolbot/src/main/java/com/example/Accesscontrolbot/Bot/Admin_Bot.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,12 +47,16 @@
     "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "master",
     "last_opened_file_path": "F:/HSE/Project HSE_RAIF 2023-2024/OpenSource_Access_Control_Bot_Java",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.2",
     "spring.configuration.checksum": "ed6b7216d1603c11efbd3b9f43712f37",
     "vue.rearranger.settings.migration": "true"
   }
@@ -103,7 +96,8 @@
       <workItem from="1699442968415" duration="1305000" />
       <workItem from="1700239018082" duration="5884000" />
       <workItem from="1700316180947" duration="1238000" />
-      <workItem from="1700317428175" duration="1451000" />
+      <workItem from="1700317428175" duration="1697000" />
+      <workItem from="1700319134266" duration="654000" />
     </task>
     <task id="LOCAL-00001" summary="test commit">
       <option name="closed" value="true" />
@@ -121,7 +115,15 @@
       <option name="project" value="LOCAL" />
       <updated>1700316155284</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="test bot 18.11">
+      <option name="closed" value="true" />
+      <created>1700318964039</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1700318964040</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -130,6 +132,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="test commit" />
     <MESSAGE value="test bot" />
-    <option name="LAST_COMMIT_MESSAGE" value="test bot" />
+    <MESSAGE value="test bot 18.11" />
+    <option name="LAST_COMMIT_MESSAGE" value="test bot 18.11" />
   </component>
 </project>

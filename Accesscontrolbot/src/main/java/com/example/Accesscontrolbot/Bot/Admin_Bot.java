@@ -53,6 +53,7 @@ public class Admin_Bot extends TelegramLongPollingBot {
                 String userName = update.getMessage().getChat().getUserName();
                 startCommand(chatId, userName);
             }
+            case HELP -> helpCommand(chatId);
         }
     }
 
@@ -64,6 +65,13 @@ public class Admin_Bot extends TelegramLongPollingBot {
                 /help - получение справки
                 """;
         var formattedText = String.format(text, userName);
+        sendMessage(chatId, formattedText);
+    }
+
+    private void helpCommand(Long chatId) {
+        var text = """
+                Пишите @andrei_lavrov
+                """;
         sendMessage(chatId, formattedText);
     }
 
