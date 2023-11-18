@@ -10,11 +10,20 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 @Configuration
 public class Admin_Bot_Configuration {
 
+//    @Bean
+//    public TelegramBotsApi telegramBotsApi(Admin_Bot admin_Bot) throws TelegramApiException {
+//        var api = new TelegramBotsApi(DefaultBotSession.class);
+//        api.registerBot(admin_Bot);
+//        return api;
+//    }
+
     @Bean
-    public TelegramBotsApi telegramBotsApi(Admin_Bot admin_Bot) throws TelegramApiException {
-        var api = new TelegramBotsApi(DefaultBotSession.class);
-        api.registerBot(admin_Bot);
-        return api;
+    public TelegramBotsApi telegramBotsApi() throws Exception {
+        return new TelegramBotsApi(DefaultBotSession.class);
     }
 
+    @Bean
+    public Admin_Bot myBot() {
+        return new Admin_Bot();
+    }
 }
