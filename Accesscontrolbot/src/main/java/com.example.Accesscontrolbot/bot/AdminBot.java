@@ -1,6 +1,7 @@
 package com.example.Accesscontrolbot.bot;
 
 
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
@@ -18,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 
 @Component
@@ -40,9 +42,10 @@ public class AdminBot extends TelegramLongPollingBot {
 
     private static final String START = "/start";
     private static final String HELP = "/help";
+    private static final String EMAIL = "/email";
 
 
-
+    @SneakyThrows
     @Override
     public void onUpdateReceived(Update update) {
         // Проверяем, есть ли сообщение и новый участник в чате
@@ -66,6 +69,19 @@ public class AdminBot extends TelegramLongPollingBot {
                 startCommand(chatId, userName);
             }
             case HELP -> helpCommand(chatId);
+
+            case EMAIL -> emailCommand(chatId);
+            default -> {
+                if (EMAIL_PATTERN.matcher(message).matches()) {
+                    // Обработка корректного электронного адреса
+                    var confirmationText = "Ваш электронный адрес успешно сохранен: " + message;
+                    sendMessage(chatId, confirmationText);
+                } else {
+                    // Ответить на несоответствующие сообщения
+                    var errorText = "Это не похоже на корректный электронный адрес. Попробуйте еще раз.";
+                    sendMessage(chatId, errorText);
+                }
+            }
         }
 
     }
@@ -75,6 +91,7 @@ public class AdminBot extends TelegramLongPollingBot {
                 Добро пожаловать в бот, %s!
                 
                 Другие команды:
+                /email - отправить корпоративную почту
                 /help - получение справки
                 """;
         var formattedText = String.format(text, userName);
@@ -88,25 +105,35 @@ public class AdminBot extends TelegramLongPollingBot {
         sendMessage(chatId, text);
     }
 
-    private void sendWelcomeMessage(String chatId) {
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@([A-Za-z0-9.-]+\\.[A-Za-z]{2,6})$");
+
+    private void emailCommand(Long chatId) {
+        var text = "Пожалуйста, введите ваш корпоративный электронный адрес в формате 'example@domain.com'";
+        sendMessage(chatId, text);
+    }
+
+
+    private void sendWelcomeMessage(String chatId) throws TelegramApiException {
+
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
-        InlineKeyboardButton button = InlineKeyboardButton.builder()
-                .text("Нажмите здесь")
-                .callbackData("welcome_button")
+        InlineKeyboardButton startButton = InlineKeyboardButton.builder()
+                .text("Начать чат с ботом")
+                .url("https://t.me/OS_Access_Control_Bot?start")
                 .build();
 
         List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
         List<InlineKeyboardButton> keyboardRow = new ArrayList<>();
-        keyboardRow.add(button);
+        keyboardRow.add(startButton);
         keyboard.add(keyboardRow);
 
         inlineKeyboardMarkup.setKeyboard(keyboard);
 
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
-        message.setText("Добро пожаловать в чат! Пожалуйста, нажмите на кнопку ниже.");
+        message.setText("Для начала общения с ботом, пожалуйста, нажмите на кнопку ниже. Затем в чате с ботом отправьте команду /start.");
         message.setReplyMarkup(inlineKeyboardMarkup);
+
 
         try {
             execute(message); // Отправка сообщения с кнопкой
@@ -122,8 +149,10 @@ public class AdminBot extends TelegramLongPollingBot {
         answerCallbackQuery.getMessage().getChatId();
 
         // Обработка нажатия на кнопку
-        if (answerCallbackQuery.getData().equals("welcome_button")) {
-            sendPrivateMessage(answerCallbackQuery.getFrom().getId().toString());
+        if (answerCallbackQuery.getData().equals("start_command")) {
+            String chatId = answerCallbackQuery.getMessage().getChatId().toString();
+            String userName = answerCallbackQuery.getFrom().getUserName();
+            startCommand(Long.valueOf(chatId), userName);
         }
     }
 
@@ -138,8 +167,6 @@ public class AdminBot extends TelegramLongPollingBot {
             LOG.error("Ошибка отправки личного сообщения", e);
         }
     }
-
-
 
     private void sendMessage(Long chatId, String text) {
         var chatIdStr = String.valueOf(chatId);
