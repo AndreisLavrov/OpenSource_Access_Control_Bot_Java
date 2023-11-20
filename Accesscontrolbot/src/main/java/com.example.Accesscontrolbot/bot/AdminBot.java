@@ -156,17 +156,17 @@ public class AdminBot extends TelegramLongPollingBot {
         }
     }
 
-    private void sendPrivateMessage(String userId) {
-        SendMessage message = new SendMessage();
-        message.setChatId(userId);
-        message.setText("Спасибо за нажатие на кнопку!");
-        try {
-            execute(message);
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-            LOG.error("Ошибка отправки личного сообщения", e);
-        }
-    }
+//    private void sendPrivateMessage(String userId) {
+//        SendMessage message = new SendMessage();
+//        message.setChatId(userId);
+//        message.setText("Спасибо за нажатие на кнопку!");
+//        try {
+//            execute(message);
+//        } catch (TelegramApiException e) {
+//            e.printStackTrace();
+//            LOG.error("Ошибка отправки личного сообщения", e);
+//        }
+//    }
 
     private void sendMessage(Long chatId, String text) {
         var chatIdStr = String.valueOf(chatId);
