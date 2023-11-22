@@ -2,6 +2,7 @@ package com.example.Accesscontrolbot.bot;
 
 
 import lombok.SneakyThrows;
+
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
@@ -28,22 +29,26 @@ public class AdminBot extends TelegramLongPollingBot {
 //    @Value("${bot.username}")
 //    private String username;
 
-//    @Value("${bot.token}")
+    //    @Value("${bot.token}")
 //    private String token;
     public AdminBot() {
-        super("6656464254:AAHszSvOiVgD0L7J1XGb3KkBCYe2WwuRPVU");
+
+        super(("6656464254:AAHszSvOiVgD0L7J1XGb3KkBCYe2WwuRPVU"));
     }
-    
+
     @Override
     public String getBotUsername() {
+
         return "AdminBot";
     }
+
     private static final Logger LOG = LoggerFactory.getLogger(AdminBot.class);
 
     private static final String START = "/start";
     private static final String HELP = "/help";
     private static final String EMAIL = "/email";
 
+    private boolean isWaitingForEmail = false;
 
     @SneakyThrows
     @Override
@@ -58,44 +63,46 @@ public class AdminBot extends TelegramLongPollingBot {
             handleCallback(update.getCallbackQuery());
         }
 
-        if(!update.hasMessage() || !update.getMessage().hasText()) {
+        if (!update.hasMessage() || !update.getMessage().hasText()) {
             return;
         }
+
         var message = update.getMessage().getText();
         var chatId = update.getMessage().getChatId();
+
+        if (isWaitingForEmail) {
+            if (EMAIL_PATTERN.matcher(message).matches()) {
+                var confirmationText = "Ваш электронный адрес успешно сохранен: " + message;
+                sendMessage(chatId, confirmationText);
+            } else {
+                var errorText = "Это не похоже на корректный электронный адрес. Пожалуйста, попробуйте еще раз.";
+                sendMessage(chatId, errorText);
+            }
+            isWaitingForEmail = false;
+            return;
+        }
+
         switch (message) {
             case START -> {
                 String userName = update.getMessage().getChat().getUserName();
                 startCommand(chatId, userName);
             }
             case HELP -> helpCommand(chatId);
-
-            case EMAIL -> emailCommand(chatId);
+            case EMAIL -> {
+                emailCommand(chatId);
+                isWaitingForEmail = true;
+            }
             default -> {
-                if (EMAIL_PATTERN.matcher(message).matches()) {
-                    // Обработка корректного электронного адреса
-                    var confirmationText = "Ваш электронный адрес успешно сохранен: " + message;
-                    sendMessage(chatId, confirmationText);
-                } else {
-                    // Ответить на несоответствующие сообщения
-                    var errorText = "Это не похоже на корректный электронный адрес. Попробуйте еще раз.";
-                    sendMessage(chatId, errorText);
-                }
+                var defaultMessage = "Я не понимаю эту команду. Пожалуйста, используйте /start, /help или /email.";
+                sendMessage(chatId, defaultMessage);
             }
         }
-
     }
 
     private void startCommand(Long chatId, String userName) {
-        var text = """
-                Добро пожаловать в бот, %s!
-                
-                Другие команды:
-                /email - отправить корпоративную почту
-                /help - получение справки
-                """;
-        var formattedText = String.format(text, userName);
-        sendMessage(chatId, formattedText);
+        String responseText = String.format("Добро пожаловать в бот, %s!\n", userName);
+        responseText += "\nДругие команды:\n/email - отправить корпоративную почту\n/help - получение справки";
+        sendMessage(chatId, responseText);
     }
 
     private void helpCommand(Long chatId) {
