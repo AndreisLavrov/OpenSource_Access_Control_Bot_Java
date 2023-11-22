@@ -5,7 +5,6 @@ import lombok.SneakyThrows;
 
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -13,6 +12,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
+
 
 
 import org.slf4j.Logger;
@@ -26,11 +26,6 @@ import java.util.regex.Pattern;
 @Component
 public class AdminBot extends TelegramLongPollingBot {
 
-//    @Value("${bot.username}")
-//    private String username;
-
-    //    @Value("${bot.token}")
-//    private String token;
     public AdminBot() {
 
         super(("6656464254:AAHszSvOiVgD0L7J1XGb3KkBCYe2WwuRPVU"));
@@ -52,6 +47,7 @@ public class AdminBot extends TelegramLongPollingBot {
 
     @SneakyThrows
     @Override
+
     public void onUpdateReceived(Update update) {
         // Проверяем, есть ли сообщение и новый участник в чате
         if (update.hasMessage() && update.getMessage().getNewChatMembers() != null && !update.getMessage().getNewChatMembers().isEmpty()) {
@@ -150,6 +146,7 @@ public class AdminBot extends TelegramLongPollingBot {
         }
     }
 
+
     private void handleCallback(CallbackQuery answerCallbackQuery) {
         // Идентификатор сообщения и чата для редактирования
         answerCallbackQuery.getMessage().getMessageId();
@@ -162,18 +159,6 @@ public class AdminBot extends TelegramLongPollingBot {
             startCommand(Long.valueOf(chatId), userName);
         }
     }
-
-//    private void sendPrivateMessage(String userId) {
-//        SendMessage message = new SendMessage();
-//        message.setChatId(userId);
-//        message.setText("Спасибо за нажатие на кнопку!");
-//        try {
-//            execute(message);
-//        } catch (TelegramApiException e) {
-//            e.printStackTrace();
-//            LOG.error("Ошибка отправки личного сообщения", e);
-//        }
-//    }
 
     private void sendMessage(Long chatId, String text) {
         var chatIdStr = String.valueOf(chatId);
