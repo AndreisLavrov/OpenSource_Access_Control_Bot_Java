@@ -2,26 +2,22 @@ package com.example.Accesscontrolbot.bot;
 
 
 import lombok.SneakyThrows;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.objects.Update;
-
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
+import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-
-
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
-
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Component
 public class AdminBot extends TelegramLongPollingBot {
@@ -49,6 +45,12 @@ public class AdminBot extends TelegramLongPollingBot {
     @Override
 
     public void onUpdateReceived(Update update) {
+
+        // Проверяем, является ли чат приватным
+        if (update.hasMessage() && !"private".equals(update.getMessage().getChat().getType())) {
+            return; // Если это не приватный чат, игнорируем обновление
+        }
+
         // Проверяем, есть ли сообщение и новый участник в чате
         if (update.hasMessage() && update.getMessage().getNewChatMembers() != null && !update.getMessage().getNewChatMembers().isEmpty()) {
             sendWelcomeMessage(update.getMessage().getChatId().toString());
@@ -67,12 +69,14 @@ public class AdminBot extends TelegramLongPollingBot {
         var chatId = update.getMessage().getChatId();
 
         if (isWaitingForEmail) {
+            emailTimer.cancel();
             if (EMAIL_PATTERN.matcher(message).matches()) {
                 var confirmationText = "Ваш электронный адрес успешно сохранен: " + message;
                 sendMessage(chatId, confirmationText);
             } else {
                 var errorText = "Это не похоже на корректный электронный адрес. Пожалуйста, попробуйте еще раз.";
                 sendMessage(chatId, errorText);
+                emailCommand(chatId);
             }
             isWaitingForEmail = false;
             return;
@@ -110,9 +114,23 @@ public class AdminBot extends TelegramLongPollingBot {
 
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@([A-Za-z0-9.-]+\\.[A-Za-z]{2,6})$");
 
+    private Timer emailTimer;
+
     private void emailCommand(Long chatId) {
         var text = "Пожалуйста, введите ваш корпоративный электронный адрес в формате 'example@domain.com'";
         sendMessage(chatId, text);
+
+        emailTimer = new Timer();
+        emailTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (isWaitingForEmail) {
+                    var timeoutMessage = "Время для ввода электронной почты истекло.";
+                    sendMessage(chatId, timeoutMessage);
+                    isWaitingForEmail = false;
+                }
+            }
+        }, 60000); // 600000 миллисекунд = 10 минут
     }
 
 

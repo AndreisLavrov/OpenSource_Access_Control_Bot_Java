@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7fa8a45f-2d5e-4394-96ac-7ec991270e45" name="Changes" comment="test bot 18.11">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="7fa8a45f-2d5e-4394-96ac-7ec991270e45" name="Changes" comment="small fixes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Accesscontrolbot/src/main/java/com/example/Accesscontrolbot/Bot/Admin_Bot.java" beforeDir="false" afterPath="$PROJECT_DIR$/Accesscontrolbot/src/main/java/com/example/Accesscontrolbot/Bot/Admin_Bot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Accesscontrolbot/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Accesscontrolbot/src/main/java/com.example.Accesscontrolbot/bot/AdminBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/Accesscontrolbot/src/main/java/com.example.Accesscontrolbot/bot/AdminBot.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,6 +17,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="package-info" />
         <option value="Class" />
       </list>
     </option>
@@ -34,33 +35,42 @@
       </MavenGeneralSettings>
     </option>
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectId" id="2XtKWSYoEOWdlomkOL6bsr74Zag" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "F:/HSE/Project HSE_RAIF 2023-2024/OpenSource_Access_Control_Bot_Java",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.2",
-    "spring.configuration.checksum": "ed6b7216d1603c11efbd3b9f43712f37",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;F:/HSE/Project HSE_RAIF 2023-2024/OpenSource_Access_Control_Bot_Java&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.repository.indices&quot;,
+    &quot;spring.configuration.checksum&quot;: &quot;ed6b7216d1603c11efbd3b9f43712f37&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="F:\HSE\Project HSE_RAIF 2023-2024\OpenSource_Access_Control_Bot_Java\Accesscontrolbot\src\main\java" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration default="true" type="Application" factoryName="Application">
       <option name="ALTERNATIVE_JRE_PATH" value="21" />
@@ -70,7 +80,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AccessControlBotApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+    <configuration name="AccessControlBotApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <option name="ALTERNATIVE_JRE_PATH" value="BUNDLED" />
       <module name="Access-control-bot" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.Accesscontrolbot.AccessControlBotApplication" />
       <method v="2">
@@ -97,7 +108,15 @@
       <workItem from="1700239018082" duration="5884000" />
       <workItem from="1700316180947" duration="1238000" />
       <workItem from="1700317428175" duration="1697000" />
-      <workItem from="1700319134266" duration="654000" />
+      <workItem from="1700319134266" duration="4393000" />
+      <workItem from="1700327430075" duration="3060000" />
+      <workItem from="1700331564775" duration="296000" />
+      <workItem from="1700331862839" duration="168000" />
+      <workItem from="1700332039527" duration="3443000" />
+      <workItem from="1700336769157" duration="11962000" />
+      <workItem from="1700467411473" duration="10860000" />
+      <workItem from="1700815099605" duration="596000" />
+      <workItem from="1701186983505" duration="5176000" />
     </task>
     <task id="LOCAL-00001" summary="test commit">
       <option name="closed" value="true" />
@@ -123,7 +142,63 @@
       <option name="project" value="LOCAL" />
       <updated>1700318964040</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="test bot 18.11">
+      <option name="closed" value="true" />
+      <created>1700319873859</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1700319873859</updated>
+    </task>
+    <task id="LOCAL-00005" summary="bot 18.11">
+      <option name="closed" value="true" />
+      <created>1700335696917</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1700335696917</updated>
+    </task>
+    <task id="LOCAL-00006" summary="first step of working bot 19.11">
+      <option name="closed" value="true" />
+      <created>1700341749057</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1700341749057</updated>
+    </task>
+    <task id="LOCAL-00007" summary="add command /email">
+      <option name="closed" value="true" />
+      <created>1700407352209</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1700407352209</updated>
+    </task>
+    <task id="LOCAL-00008" summary="small fixes">
+      <option name="closed" value="true" />
+      <created>1700478221856</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1700478221856</updated>
+    </task>
+    <task id="LOCAL-00009" summary="small fixes">
+      <option name="closed" value="true" />
+      <created>1700654023575</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1700654023575</updated>
+    </task>
+    <task id="LOCAL-00010" summary="small fixes">
+      <option name="closed" value="true" />
+      <created>1700657363153</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1700657363153</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -133,6 +208,13 @@
     <MESSAGE value="test commit" />
     <MESSAGE value="test bot" />
     <MESSAGE value="test bot 18.11" />
-    <option name="LAST_COMMIT_MESSAGE" value="test bot 18.11" />
+    <MESSAGE value="bot 18.11" />
+    <MESSAGE value="first step of working bot 19.11" />
+    <MESSAGE value="add command /email" />
+    <MESSAGE value="small fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="small fixes" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/OpenSource_Access_Control_Bot_Java$AccessControlBotApplication.ic" NAME="AccessControlBotApplication Coverage Results" MODIFIED="1700321744535" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>
