@@ -45,23 +45,20 @@ public class AdminBot extends TelegramLongPollingBot {
     @Override
 
     public void onUpdateReceived(Update update) {
-
-        // Проверяем, является ли чат приватным
-        if (update.hasMessage() && !"private".equals(update.getMessage().getChat().getType())) {
-            return; // Если это не приватный чат, игнорируем обновление
-        }
-
         // Проверяем, есть ли сообщение и новый участник в чате
         if (update.hasMessage() && update.getMessage().getNewChatMembers() != null && !update.getMessage().getNewChatMembers().isEmpty()) {
             sendWelcomeMessage(update.getMessage().getChatId().toString());
         }
 
-        // Если это callback от нажатия кнопки (реакция)
         if (update.hasCallbackQuery()) {
             handleCallback(update.getCallbackQuery());
         }
 
         if (!update.hasMessage() || !update.getMessage().hasText()) {
+            return;
+        }
+
+        if (update.hasMessage() && ("group".equals(update.getMessage().getChat().getType()) || "supergroup".equals(update.getMessage().getChat().getType()) || "channel".equals(update.getMessage().getChat().getType()))) {
             return;
         }
 
@@ -125,12 +122,12 @@ public class AdminBot extends TelegramLongPollingBot {
             @Override
             public void run() {
                 if (isWaitingForEmail) {
-                    var timeoutMessage = "Время для ввода электронной почты истекло.";
+                    var timeoutMessage = "Время для ввода электронной почты истекло.\nПопробуйте заново /email";
                     sendMessage(chatId, timeoutMessage);
                     isWaitingForEmail = false;
                 }
             }
-        }, 60000); // 600000 миллисекунд = 10 минут
+        }, 60000); // 60000 миллисекунд = 1 минута
     }
 
 

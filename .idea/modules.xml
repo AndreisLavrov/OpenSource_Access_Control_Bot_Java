@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/OpenSource_Access_Control_Bot_Java.iml" filepath="$PROJECT_DIR$/.idea/OpenSource_Access_Control_Bot_Java.iml" />
+      <module fileurl="file://$PROJECT_DIR$/scripts/scripts.iml" filepath="$PROJECT_DIR$/scripts/scripts.iml" />
     </modules>
   </component>
 </project>
