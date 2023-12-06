@@ -12,6 +12,8 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.springframework.beans.factory.annotation.Value;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +24,15 @@ import java.util.TimerTask;
 @Component
 public class AdminBot extends TelegramLongPollingBot {
 
+    @Value("${bot.token}")
+    private String botToken;
     public AdminBot() {
+        super();
+    }
 
-        super(("6656464254:AAHszSvOiVgD0L7J1XGb3KkBCYe2WwuRPVU"));
+    @Override
+    public String getBotToken() {
+        return botToken;
     }
 
     @Override
@@ -131,7 +139,7 @@ public class AdminBot extends TelegramLongPollingBot {
     }
 
 
-    private void sendWelcomeMessage(String chatId) throws TelegramApiException {
+    private void sendWelcomeMessage(String chatId) {
 
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 

@@ -14,8 +14,4 @@ public class AdminBotConfiguration {
         return new TelegramBotsApi(DefaultBotSession.class);
     }
 
-    @Bean
-    public AdminBot myBot() {
-        return new AdminBot();
-    }
 }
