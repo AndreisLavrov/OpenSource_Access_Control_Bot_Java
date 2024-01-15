@@ -17,9 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
-import java.util.Timer;
-import java.util.TimerTask;
+
 
 @Component
 public class AdminBot extends TelegramLongPollingBot {
@@ -49,6 +47,10 @@ public class AdminBot extends TelegramLongPollingBot {
 
     private boolean isWaitingForEmail = false;
 
+    private final EmailCommandHandler emailCommandHandler = new EmailCommandHandler(this);
+
+
+
     @SneakyThrows
     @Override
 
@@ -70,22 +72,16 @@ public class AdminBot extends TelegramLongPollingBot {
             return;
         }
 
-        var message = update.getMessage().getText();
-        var chatId = update.getMessage().getChatId();
+        String message = update.getMessage().getText();
+        Long chatId = update.getMessage().getChatId();
+        String username = update.getMessage().getFrom().getId().toString();
 
         if (isWaitingForEmail) {
-            emailTimer.cancel();
-            if (EMAIL_PATTERN.matcher(message).matches()) {
-                var confirmationText = "Ваш электронный адрес успешно сохранен: " + message;
-                sendMessage(chatId, confirmationText);
-            } else {
-                var errorText = "Это не похоже на корректный электронный адрес. Пожалуйста, попробуйте еще раз.";
-                sendMessage(chatId, errorText);
-                emailCommand(chatId);
-            }
+            emailCommandHandler.processEmail(chatId, message, username);
             isWaitingForEmail = false;
             return;
         }
+
 
         switch (message) {
             case START -> {
@@ -94,7 +90,9 @@ public class AdminBot extends TelegramLongPollingBot {
             }
             case HELP -> helpCommand(chatId);
             case EMAIL -> {
-                emailCommand(chatId);
+//                emailCommand(chatId);
+//                isWaitingForEmail = true;
+                emailCommandHandler.handleEmailCommand(chatId);
                 isWaitingForEmail = true;
             }
             default -> {
@@ -108,6 +106,9 @@ public class AdminBot extends TelegramLongPollingBot {
         String responseText = String.format("Добро пожаловать в бот, %s!\n", userName);
         responseText += "\nДругие команды:\n/email - отправить корпоративную почту\n/help - получение справки";
         sendMessage(chatId, responseText);
+
+        emailCommandHandler.handleEmailCommand(chatId);
+        isWaitingForEmail = true; // Установка флага, что мы ожидаем ввода email
     }
 
     private void helpCommand(Long chatId) {
@@ -116,28 +117,6 @@ public class AdminBot extends TelegramLongPollingBot {
                 """;
         sendMessage(chatId, text);
     }
-
-    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@([A-Za-z0-9.-]+\\.[A-Za-z]{2,6})$");
-
-    private Timer emailTimer;
-
-    private void emailCommand(Long chatId) {
-        var text = "Пожалуйста, введите ваш корпоративный электронный адрес в формате 'example@domain.com'";
-        sendMessage(chatId, text);
-
-        emailTimer = new Timer();
-        emailTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (isWaitingForEmail) {
-                    var timeoutMessage = "Время для ввода электронной почты истекло.\nПопробуйте заново /email";
-                    sendMessage(chatId, timeoutMessage);
-                    isWaitingForEmail = false;
-                }
-            }
-        }, 60000); // 60000 миллисекунд = 1 минута
-    }
-
 
     private void sendWelcomeMessage(String chatId) {
 
