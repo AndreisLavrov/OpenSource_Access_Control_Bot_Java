@@ -4,25 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7fa8a45f-2d5e-4394-96ac-7ec991270e45" name="Changes" comment="add config">
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Accesscontrolbot/src/main/java/com.example.Accesscontrolbot/bot/EmailCommandHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+    <list default="true" id="7fa8a45f-2d5e-4394-96ac-7ec991270e45" name="Changes" comment="test commit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Accesscontrolbot/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Accesscontrolbot/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Accesscontrolbot/src/main/java/com.example.Accesscontrolbot/AccessControlBotApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/Accesscontrolbot/src/main/java/com.example.Accesscontrolbot/AccessControlBotApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Accesscontrolbot/src/main/java/com.example.Accesscontrolbot/bot/AdminBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/Accesscontrolbot/src/main/java/com.example.Accesscontrolbot/bot/AdminBot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Accesscontrolbot/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Accesscontrolbot/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Accesscontrolbot/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Accesscontrolbot/target/classes/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Accesscontrolbot/target/classes/com/example/Accesscontrolbot/AccessControlBotApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/Accesscontrolbot/target/classes/com/example/Accesscontrolbot/AccessControlBotApplication.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Accesscontrolbot/target/classes/com/example/Accesscontrolbot/bot/AdminBot$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Accesscontrolbot/target/classes/com/example/Accesscontrolbot/bot/AdminBot.class" beforeDir="false" afterPath="$PROJECT_DIR$/Accesscontrolbot/target/classes/com/example/Accesscontrolbot/bot/AdminBot.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Accesscontrolbot/target/classes/com/example/Accesscontrolbot/configuration/AdminBotConfiguration.class" beforeDir="false" afterPath="$PROJECT_DIR$/Accesscontrolbot/target/classes/com/example/Accesscontrolbot/configuration/AdminBotConfiguration.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/scripts.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/scripts/python/get_chat_members.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/scripts/python/session.session" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,6 +23,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -60,36 +48,36 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "master",
-    "jdk.selected.JAVA_MODULE": "21",
-    "last_opened_file_path": "F:/spring-boot-starter-telegram-master",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "settings.sync",
-    "spring.configuration.checksum": "ed6b7216d1603c11efbd3b9f43712f37",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;21&quot;,
+    &quot;last_opened_file_path&quot;: &quot;F:/spring-boot-starter-telegram-master&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.sync&quot;,
+    &quot;spring.configuration.checksum&quot;: &quot;ed6b7216d1603c11efbd3b9f43712f37&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "postgresql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;postgresql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="F:\HSE\Project HSE_RAIF 2023-2024\OpenSource_Access_Control_Bot_Java\scripts" />
@@ -194,7 +182,7 @@
       <workItem from="1702925217990" duration="594000" />
       <workItem from="1702925825447" duration="5011000" />
       <workItem from="1704461540991" duration="9875000" />
-      <workItem from="1705232291059" duration="20467000" />
+      <workItem from="1705232291059" duration="20928000" />
     </task>
     <task id="LOCAL-00001" summary="test commit">
       <option name="closed" value="true" />
@@ -308,7 +296,23 @@
       <option name="project" value="LOCAL" />
       <updated>1701873933732</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="test commit">
+      <option name="closed" value="true" />
+      <created>1705351506713</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1705351506713</updated>
+    </task>
+    <task id="LOCAL-00016" summary="test commit">
+      <option name="closed" value="true" />
+      <created>1705351531713</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1705351531713</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -319,14 +323,25 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="test" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="test commit" />
     <MESSAGE value="test bot" />
     <MESSAGE value="test bot 18.11" />
     <MESSAGE value="bot 18.11" />
@@ -336,7 +351,8 @@
     <MESSAGE value="fix bugs + add timer for email" />
     <MESSAGE value="06.12" />
     <MESSAGE value="add config" />
-    <option name="LAST_COMMIT_MESSAGE" value="add config" />
+    <MESSAGE value="test commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="test commit" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
