@@ -4,8 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7fa8a45f-2d5e-4394-96ac-7ec991270e45" name="Changes" comment="test commit">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="7fa8a45f-2d5e-4394-96ac-7ec991270e45" name="Changes" comment="commit 05.02">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/0e4673b5-6d09-410a-9317-3835bbb57b9b/storage_v2/_src_/database/postgres.edMnLQ/schema/public.abK9xQ.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/0e4673b5-6d09-410a-9317-3835bbb57b9b/storage_v2/_src_/database/postgres.edMnLQ/schema/public.abK9xQ.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Accesscontrolbot/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Accesscontrolbot/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Accesscontrolbot/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/Accesscontrolbot/target/classes/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,7 +71,7 @@
     &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;settings.sync&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.projectsettings.compiler.javacompiler&quot;,
     &quot;spring.configuration.checksum&quot;: &quot;ed6b7216d1603c11efbd3b9f43712f37&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
@@ -183,6 +186,8 @@
       <workItem from="1702925825447" duration="5011000" />
       <workItem from="1704461540991" duration="9875000" />
       <workItem from="1705232291059" duration="20928000" />
+      <workItem from="1706743262425" duration="6119000" />
+      <workItem from="1707176742362" duration="362000" />
     </task>
     <task id="LOCAL-00001" summary="test commit">
       <option name="closed" value="true" />
@@ -312,7 +317,15 @@
       <option name="project" value="LOCAL" />
       <updated>1705351531713</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="commit 05.02">
+      <option name="closed" value="true" />
+      <created>1707176945646</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1707176945646</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -352,7 +365,8 @@
     <MESSAGE value="06.12" />
     <MESSAGE value="add config" />
     <MESSAGE value="test commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="test commit" />
+    <MESSAGE value="commit 05.02" />
+    <option name="LAST_COMMIT_MESSAGE" value="commit 05.02" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

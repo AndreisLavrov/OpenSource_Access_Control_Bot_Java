@@ -1,16 +1,15 @@
 package com.example.Accesscontrolbot.model;
 
-import javax.persistence.Entity;
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
-@Table(name = "User")
+@Table(name = "info_user")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(unique = true)
     private String email;
     private String username;
 

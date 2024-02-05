@@ -1,22 +1,25 @@
 package com.example.Accesscontrolbot.bot;
 
-
 import lombok.SneakyThrows;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.springframework.beans.factory.annotation.Value;
 
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 @Component
@@ -24,6 +27,15 @@ public class AdminBot extends TelegramLongPollingBot {
 
     @Value("${bot.token}")
     private String botToken;
+
+    @Autowired
+    @Lazy
+    private EmailCommandHandler emailCommandHandler;
+
+    @Autowired
+    @Lazy
+    private EmailVerificationService emailVerificationService;
+
     public AdminBot() {
         super();
     }
@@ -39,16 +51,16 @@ public class AdminBot extends TelegramLongPollingBot {
         return "AdminBot";
     }
 
+
+
     private static final Logger LOG = LoggerFactory.getLogger(AdminBot.class);
 
     private static final String START = "/start";
     private static final String HELP = "/help";
     private static final String EMAIL = "/email";
+    private static final String VERIFICATION = "/verification";
 
-    private boolean isWaitingForEmail = false;
-
-    private final EmailCommandHandler emailCommandHandler = new EmailCommandHandler(this);
-
+    private final Map<Long, Boolean> userIsWaitingForEmail = new ConcurrentHashMap<>();
 
 
     @SneakyThrows
@@ -72,44 +84,53 @@ public class AdminBot extends TelegramLongPollingBot {
             return;
         }
 
+
+
         String message = update.getMessage().getText();
         Long chatId = update.getMessage().getChatId();
         String username = update.getMessage().getFrom().getId().toString();
 
-        if (isWaitingForEmail) {
+
+        if (userIsWaitingForEmail.getOrDefault(chatId, false)) {
             emailCommandHandler.processEmail(chatId, message, username);
-            isWaitingForEmail = false;
+            userIsWaitingForEmail.put(chatId, false); // Сброс флага после обработки email
             return;
         }
 
 
         switch (message) {
             case START -> {
-                String userName = update.getMessage().getChat().getUserName();
-                startCommand(chatId, userName);
+                String firstName = update.getMessage().getFrom().getFirstName();
+                String lastName = update.getMessage().getFrom().getLastName();
+                startCommand(chatId, firstName, lastName);
+
+
             }
             case HELP -> helpCommand(chatId);
             case EMAIL -> {
-//                emailCommand(chatId);
-//                isWaitingForEmail = true;
                 emailCommandHandler.handleEmailCommand(chatId);
-                isWaitingForEmail = true;
+                userIsWaitingForEmail.put(chatId, true);
+
             }
+            case VERIFICATION -> handleVerificationCommand(update.getMessage(), chatId);
             default -> {
-                var defaultMessage = "Я не понимаю эту команду. Пожалуйста, используйте /start, /help или /email.";
+                var defaultMessage = "Я не понимаю эту команду. Пожалуйста, используйте /start, /help, /email или /verification.";
                 sendMessage(chatId, defaultMessage);
             }
         }
     }
 
-    private void startCommand(Long chatId, String userName) {
-        String responseText = String.format("Добро пожаловать в бот, %s!\n", userName);
-        responseText += "\nДругие команды:\n/email - отправить корпоративную почту\n/help - получение справки";
-        sendMessage(chatId, responseText);
 
-        emailCommandHandler.handleEmailCommand(chatId);
-        isWaitingForEmail = true; // Установка флага, что мы ожидаем ввода email
+    private void startCommand(Long chatId, String firstName, String lastName) {
+        String nameToUse = (firstName != null ? firstName : "") + (lastName != null ? " " + lastName : "");
+        nameToUse = nameToUse.trim().isEmpty() ? "пользователь" : nameToUse.trim();
+
+        String responseText = String.format("Добро пожаловать в бот, %s!\n", nameToUse);
+        responseText += "Другие команды:\n/email - отправить корпоративную почту\n/help - получение справки\n/verification - приступить к верификации";
+        sendMessage(chatId, responseText);
     }
+
+
 
     private void helpCommand(Long chatId) {
         var text = """
@@ -148,17 +169,13 @@ public class AdminBot extends TelegramLongPollingBot {
         }
     }
 
+    private void handleCallback(CallbackQuery callbackQuery) {
+        Long chatId = callbackQuery.getMessage().getChatId();
 
-    private void handleCallback(CallbackQuery answerCallbackQuery) {
-        // Идентификатор сообщения и чата для редактирования
-        answerCallbackQuery.getMessage().getMessageId();
-        answerCallbackQuery.getMessage().getChatId();
-
-        // Обработка нажатия на кнопку
-        if (answerCallbackQuery.getData().equals("start_command")) {
-            String chatId = answerCallbackQuery.getMessage().getChatId().toString();
-            String userName = answerCallbackQuery.getFrom().getUserName();
-            startCommand(Long.valueOf(chatId), userName);
+        if (callbackQuery.getData().equals("start_command")) {
+            String firstName = callbackQuery.getFrom().getFirstName();
+            String lastName = callbackQuery.getFrom().getLastName();
+            startCommand(chatId, firstName, lastName);
         }
     }
 
@@ -171,5 +188,12 @@ public class AdminBot extends TelegramLongPollingBot {
             LOG.error("Ошибка отправки сообщения", e);
         }
     }
+
+
+    private void handleVerificationCommand(Message message, Long chatId) {
+        Long userId = message.getFrom().getId();
+        emailVerificationService.initiateVerification(userId, chatId);
+    }
+
 }
 
