@@ -17,6 +17,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.springframework.beans.factory.annotation.Value;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,6 +36,10 @@ public class AdminBot extends TelegramLongPollingBot {
     @Autowired
     @Lazy
     private EmailVerificationService emailVerificationService;
+
+    @Autowired
+    @Lazy
+    private UserStateService userStateService;
 
     public AdminBot() {
         super();
@@ -97,6 +102,21 @@ public class AdminBot extends TelegramLongPollingBot {
             return;
         }
 
+        if (update.hasMessage() && update.getMessage().hasText()) {
+            String messageText = update.getMessage().getText();
+
+            if (userStateService.getUserState(chatId) == UserStateService.UserState.AWAITING_VERIFICATION_CODE) {
+                try {
+                    int verificationCode = Integer.parseInt(messageText);
+                    emailVerificationService.verifyCode(chatId, verificationCode);
+                    userStateService.clearUserState(chatId);
+                } catch (NumberFormatException e) {
+                    sendMessage(chatId, "Пожалуйста, введите ваш код верификации.");
+                }
+                return;
+            }
+        }
+
 
         switch (message) {
             case START -> {
@@ -112,10 +132,15 @@ public class AdminBot extends TelegramLongPollingBot {
                 userIsWaitingForEmail.put(chatId, true);
 
             }
-            case VERIFICATION -> handleVerificationCommand(update.getMessage(), chatId);
+            case VERIFICATION -> {
+                handleVerificationCommand(update.getMessage(), chatId);
+                userStateService.setUserState(chatId, UserStateService.UserState.AWAITING_VERIFICATION_CODE);
+            }
+
             default -> {
-                var defaultMessage = "Я не понимаю эту команду. Пожалуйста, используйте /start, /help, /email или /verification.";
-                sendMessage(chatId, defaultMessage);
+                if (!userIsWaitingForEmail.getOrDefault(chatId, false)) {
+                    sendMessage(chatId, "Я не понимаю эту команду.\nПожалуйста, используйте /start, /help, /email или /verification.");
+                }
             }
         }
     }
