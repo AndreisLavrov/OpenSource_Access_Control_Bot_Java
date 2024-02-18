@@ -74,7 +74,6 @@ public class AdminBot extends TelegramLongPollingBot {
     }
 
 
-
     private static final Logger LOG = LoggerFactory.getLogger(AdminBot.class);
 
     private static final String START = "/start";
@@ -96,7 +95,6 @@ public class AdminBot extends TelegramLongPollingBot {
 
         if (update.hasMessage() && update.getMessage().getNewChatMembers() != null && !update.getMessage().getNewChatMembers().isEmpty()) {
             for (User member : update.getMessage().getNewChatMembers()) {
-                // Возможно, вам нужно привести результат getId() к Integer, если метод возвращает другой тип
                 sendWelcomeMessage(update.getMessage().getChatId().toString(), member.getId().toString());
 
             }
@@ -113,8 +111,6 @@ public class AdminBot extends TelegramLongPollingBot {
         if (update.hasMessage() && ("group".equals(update.getMessage().getChat().getType()) || "supergroup".equals(update.getMessage().getChat().getType()) || "channel".equals(update.getMessage().getChat().getType()))) {
             return;
         }
-
-
 
 
 
@@ -173,17 +169,6 @@ public class AdminBot extends TelegramLongPollingBot {
         }
     }
 
-
-//    private void startCommand(Long chatId, String firstName, String lastName, Long userId) {
-//        String nameToUse = (firstName != null ? firstName : "") + (lastName != null ? " " + lastName : "");
-//        nameToUse = nameToUse.trim().isEmpty() ? "пользователь" : nameToUse.trim();
-//
-//        String responseText = String.format("Добро пожаловать в бот, %s!\n", nameToUse);
-//        responseText += "Другие команды:\n/email - отправить корпоративную почту\n/help - получение справки\n/verification - приступить к верификации";
-//        sendMessage(chatId, responseText);
-//
-//        unrestrictUser(chatId.toString(), userId);
-//    }
 
     private void startCommand(Long userChatId, String firstName, String lastName, String userId) {
         String userIdString = String.valueOf(userId);
@@ -249,19 +234,6 @@ public class AdminBot extends TelegramLongPollingBot {
         }
     }
 
-    // Метод для ограничения прав пользователя
-//    private void restrictUser(String chatId, String userId) {
-//        RestrictChatMember restrictChatMember = new RestrictChatMember();
-//        restrictChatMember.setChatId(chatId);
-//        restrictUser(chatId, userId.toString());
-//        restrictChatMember.setPermissions(new ChatPermissions()); // Устанавливаем все разрешения в false
-//
-//        try {
-//            execute(restrictChatMember);
-//        } catch (TelegramApiException e) {
-//            LOG.error("Ошибка при ограничении прав пользователя", e);
-//        }
-//    }
     private void restrictUser(String chatId, String userId) {
         RestrictChatMember restrictChatMember = new RestrictChatMember();
         restrictChatMember.setChatId(chatId);
@@ -302,39 +274,6 @@ public class AdminBot extends TelegramLongPollingBot {
         }
     }
 
-
-
-
-
-//    private void sendWelcomeMessage(String chatId) {
-//
-//        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-//
-//        InlineKeyboardButton startButton = InlineKeyboardButton.builder()
-//                .text("Начать чат с ботом")
-//                .url("https://t.me/OS_Access_Control_Bot?start")
-//                .build();
-//
-//        List<List<InlineKeyboardButton>> keyboard = new ArrayList<>();
-//        List<InlineKeyboardButton> keyboardRow = new ArrayList<>();
-//        keyboardRow.add(startButton);
-//        keyboard.add(keyboardRow);
-//
-//        inlineKeyboardMarkup.setKeyboard(keyboard);
-//
-//        SendMessage message = new SendMessage();
-//        message.setChatId(chatId);
-//        message.setText("Для начала общения с ботом, пожалуйста, нажмите на кнопку ниже. Затем в чате с ботом отправьте команду /start.");
-//        message.setReplyMarkup(inlineKeyboardMarkup);
-//
-//
-//        try {
-//            execute(message); // Отправка сообщения с кнопкой
-//        } catch (TelegramApiException e) {
-//            e.printStackTrace();
-//            LOG.error("Ошибка отправки приветственного сообщения", e);
-//        }
-//    }
 
     private void handleCallback(CallbackQuery callbackQuery) {
         Long chatId = callbackQuery.getMessage().getChatId();
