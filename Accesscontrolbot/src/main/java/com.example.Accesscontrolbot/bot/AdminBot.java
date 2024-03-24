@@ -2,21 +2,32 @@ package com.example.Accesscontrolbot.bot;
 
 import com.example.Accesscontrolbot.repository.ChatInfoRepository;
 import lombok.SneakyThrows;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+
+
 
 import org.telegram.telegrambots.meta.api.methods.groupadministration.RestrictChatMember;
 import org.telegram.telegrambots.meta.api.objects.ChatPermissions;
@@ -24,12 +35,15 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import com.example.Accesscontrolbot.model.ChatInfo;
 import com.example.Accesscontrolbot.model.ChatDescr;
 import com.example.Accesscontrolbot.repository.ChatDescrRepository;
-
+import com.example.Accesscontrolbot.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+
+
+
 
 
 @Component
@@ -58,6 +72,10 @@ public class AdminBot extends TelegramLongPollingBot {
     @Lazy
     private ChatDescrRepository chatDescrRepository;
 
+    @Autowired
+    @Lazy
+    private UserRepository UserRepository;
+
     public AdminBot() {
         super();
     }
@@ -83,15 +101,31 @@ public class AdminBot extends TelegramLongPollingBot {
 
     private final Map<Long, Boolean> userIsWaitingForEmail = new ConcurrentHashMap<>();
 
+    @Scheduled(fixedDelay = 60000) // Runs the task hourly
+    public void checkUsersEmailEntry() {
+        LocalDateTime now = LocalDateTime.now();
+        List<ChatDescr> chatDescrList = chatDescrRepository.findAll();
+
+        for (ChatDescr chatDescr : chatDescrList) {
+            LocalDateTime joinTime = chatDescr.getJoinTimeStamp();
+            if (joinTime != null && Duration.between(joinTime, now).toHours() >= 24) {
+                Optional<com.example.Accesscontrolbot.model.User> userOptional = UserRepository.findByUsername(chatDescr.getUserId());
+                if (!userOptional.isPresent() || userOptional.get().getEmail() == null || userOptional.get().getEmail().isEmpty()) {
+                    // User has not entered their email after 24 hours
+                    String userMention = userOptional.isPresent() ? "@" + userOptional.get().getUsername() : "пользователь";
+                    String notificationText = "Уважаемый " + userMention + ", вы не предоставили свой адрес электронной почты. Пожалуйста, сделайте это как можно скорее.";
+                    sendMessage(Long.valueOf(chatDescr.getChatId()), notificationText);                }
+            }
+        }
+    }
+
+
 
     @SneakyThrows
     @Override
 
     public void onUpdateReceived(Update update) {
         // Проверяем, есть ли сообщение и новый участник в чате
-//        if (update.hasMessage() && update.getMessage().getNewChatMembers() != null && !update.getMessage().getNewChatMembers().isEmpty()) {
-//            sendWelcomeMessage(update.getMessage().getChatId().toString());
-//        }
 
         if (update.hasMessage() && update.getMessage().getNewChatMembers() != null && !update.getMessage().getNewChatMembers().isEmpty()) {
             for (User member : update.getMessage().getNewChatMembers()) {
@@ -112,12 +146,9 @@ public class AdminBot extends TelegramLongPollingBot {
             return;
         }
 
-
-
         String message = update.getMessage().getText();
         Long chatId = update.getMessage().getChatId();
         String username = update.getMessage().getFrom().getId().toString();
-
 
         if (userIsWaitingForEmail.getOrDefault(chatId, false)) {
             emailCommandHandler.processEmail(chatId, message, username);
@@ -125,13 +156,16 @@ public class AdminBot extends TelegramLongPollingBot {
             return;
         }
 
+
         if (update.hasMessage() && update.getMessage().hasText()) {
             String messageText = update.getMessage().getText();
-
             if (userStateService.getUserState(chatId) == UserStateService.UserState.AWAITING_VERIFICATION_CODE) {
                 try {
                     int verificationCode = Integer.parseInt(messageText);
-                    emailVerificationService.verifyCode(chatId, verificationCode);
+                    Long userId = update.getMessage().getFrom().getId();
+                    emailVerificationService.verifyCode(chatId, verificationCode, userId);
+
+                    // Clear the user state after the verification attempt, regardless of success or failure
                     userStateService.clearUserState(chatId);
                 } catch (NumberFormatException e) {
                     sendMessage(chatId, "Пожалуйста, введите ваш код верификации.");
@@ -139,7 +173,6 @@ public class AdminBot extends TelegramLongPollingBot {
                 return;
             }
         }
-
 
         switch (message) {
             case START -> {
@@ -156,9 +189,12 @@ public class AdminBot extends TelegramLongPollingBot {
                 userIsWaitingForEmail.put(chatId, true);
 
             }
+
             case VERIFICATION -> {
+                // Since there is no initial state, we clear the user state to allow re-initiation of the verification process
+                userStateService.clearUserState(chatId);
+                // We call the method to initiate the verification process again
                 handleVerificationCommand(update.getMessage(), chatId);
-                userStateService.setUserState(chatId, UserStateService.UserState.AWAITING_VERIFICATION_CODE);
             }
 
             default -> {
@@ -187,7 +223,9 @@ public class AdminBot extends TelegramLongPollingBot {
         String responseText = String.format("Добро пожаловать в бот, %s!\n", nameToUse);
         responseText += "Другие команды:\n/email - отправить корпоративную почту\n/help - получение справки\n/verification - приступить к верификации";
         sendMessage(userChatId, responseText);
+
     }
+
 
 
     private void helpCommand(Long chatId) {
@@ -234,6 +272,7 @@ public class AdminBot extends TelegramLongPollingBot {
         }
     }
 
+
     private void restrictUser(String chatId, String userId) {
         RestrictChatMember restrictChatMember = new RestrictChatMember();
         restrictChatMember.setChatId(chatId);
@@ -268,10 +307,12 @@ public class AdminBot extends TelegramLongPollingBot {
             ChatDescr chatDescr = new ChatDescr();
             chatDescr.setUserId(userId);
             chatDescr.setChatId(chatId);
+            chatDescr.setJoinTimeStamp(LocalDateTime.now());
             chatDescrRepository.save(chatDescr);
         } catch (TelegramApiException e) {
             LOG.error("Ошибка при снятии ограничений с пользователя", e);
         }
+
     }
 
 
@@ -299,8 +340,8 @@ public class AdminBot extends TelegramLongPollingBot {
 
     private void handleVerificationCommand(Message message, Long chatId) {
         Long userId = message.getFrom().getId();
+        userStateService.clearUserState(chatId);
         emailVerificationService.initiateVerification(userId, chatId);
     }
 
 }
-

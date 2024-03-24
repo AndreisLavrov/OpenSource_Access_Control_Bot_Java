@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
@@ -61,23 +62,23 @@ public class EmailCommandHandler {
     }
 
 
-private void saveUser(Long chatId, String email, String username) {
-    // Проверяем, существует ли уже пользователь с этой электронной почтой
-    Optional<User> existingUser = userRepository.findByEmail(email);
-    if (existingUser.isPresent() && !existingUser.get().getUsername().equals(username)) {
-        sendMessage(chatId, "Этот электронный адрес уже зарегистрирован в системе. Пожалуйста, используйте другой адрес.");
-    } else {
-        try {
-            User user = userRepository.findByUsername(username).orElse(new User());
-            user.setEmail(email);
-            user.setUsername(username);
-            userRepository.save(user);
-            sendMessage(chatId, "Ваш электронный адрес успешно сохранен: " + email);
-        } catch (DataIntegrityViolationException e) {
-            sendMessage(chatId, "Произошла ошибка при сохранении вашего электронного адреса. Возможно, он уже используется.");
+    private void saveUser(Long chatId, String email, String username) {
+        // Проверяем, существует ли уже пользователь с этой электронной почтой
+        Optional<User> existingUser = userRepository.findByEmail(email);
+        if (existingUser.isPresent() && !existingUser.get().getUsername().equals(username)) {
+            sendMessage(chatId, "Этот электронный адрес уже зарегистрирован в системе. Пожалуйста, используйте другой адрес.");
+        } else {
+            try {
+                User user = userRepository.findByUsername(username).orElse(new User());
+                user.setEmail(email);
+                user.setUsername(username);
+                userRepository.save(user);
+                sendMessage(chatId, "Ваш электронный адрес успешно сохранен: " + email);
+            } catch (DataIntegrityViolationException e) {
+                sendMessage(chatId, "Произошла ошибка при сохранении вашего электронного адреса. Возможно, он уже используется.");
+            }
         }
     }
-}
 
 
 

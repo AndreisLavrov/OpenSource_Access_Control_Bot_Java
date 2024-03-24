@@ -1,5 +1,6 @@
 package com.example.Accesscontrolbot.model;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 @Entity
 @Table(name = "chat_descr")
 public class ChatDescr {
@@ -10,6 +11,16 @@ public class ChatDescr {
 
     private String userId;
     private String chatId;
+    @Column(name = "join_time_stamp", nullable = false)
+    private LocalDateTime joinTimeStamp;
+
+    public LocalDateTime getJoinTimeStamp() {
+        return joinTimeStamp;
+    }
+
+    public void setJoinTimeStamp(LocalDateTime joinTimeStamp) {
+        this.joinTimeStamp = joinTimeStamp;
+    }
 
     // Конструкторы, геттеры и сеттеры
     public ChatDescr() {}
@@ -37,4 +48,6 @@ public class ChatDescr {
     public void setChatId(String chatId) {
         this.chatId = chatId;
     }
+
+
 }
