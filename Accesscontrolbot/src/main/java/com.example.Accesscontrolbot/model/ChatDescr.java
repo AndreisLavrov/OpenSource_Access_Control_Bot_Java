@@ -11,6 +11,13 @@ public class ChatDescr {
 
     private String userId;
     private String chatId;
+    private String email_access;
+    public String getEmailAccess() {
+        return email_access;
+    }
+    public void setEmailAccess(String emailAccess) {
+        this.email_access = emailAccess;
+    }
     @Column(name = "join_time_stamp", nullable = false)
     private LocalDateTime joinTimeStamp;
 
@@ -21,6 +28,8 @@ public class ChatDescr {
     public void setJoinTimeStamp(LocalDateTime joinTimeStamp) {
         this.joinTimeStamp = joinTimeStamp;
     }
+
+
 
     // Конструкторы, геттеры и сеттеры
     public ChatDescr() {}

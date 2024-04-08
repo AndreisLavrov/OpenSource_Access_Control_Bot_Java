@@ -13,18 +13,15 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
+
 
 
 
@@ -101,20 +98,37 @@ public class AdminBot extends TelegramLongPollingBot {
 
     private final Map<Long, Boolean> userIsWaitingForEmail = new ConcurrentHashMap<>();
 
-    @Scheduled(fixedDelay = 60000) // Runs the task hourly
+
+
+    @Scheduled(fixedRate = 1 * 60 * 1000) // 5 minutes in milliseconds
     public void checkUsersEmailEntry() {
         LocalDateTime now = LocalDateTime.now();
         List<ChatDescr> chatDescrList = chatDescrRepository.findAll();
 
         for (ChatDescr chatDescr : chatDescrList) {
+            if ("yes".equals(chatDescr.getEmailAccess())) {
+                continue; // Пропускаем пользователей, которые уже ввели email
+            }
+
             LocalDateTime joinTime = chatDescr.getJoinTimeStamp();
-            if (joinTime != null && Duration.between(joinTime, now).toHours() >= 24) {
-                Optional<com.example.Accesscontrolbot.model.User> userOptional = UserRepository.findByUsername(chatDescr.getUserId());
+            if (joinTime != null && Duration.between(joinTime, now).toMinutes() >= 5) {
+                String userId = chatDescr.getUserId(); // user_id из chat_descr
+
+                Optional<com.example.Accesscontrolbot.model.User> userOptional = UserRepository.findByUsername(userId);
+                // Поиск пользователя по username, который равен user_id
+
                 if (!userOptional.isPresent() || userOptional.get().getEmail() == null || userOptional.get().getEmail().isEmpty()) {
-                    // User has not entered their email after 24 hours
-                    String userMention = userOptional.isPresent() ? "@" + userOptional.get().getUsername() : "пользователь";
-                    String notificationText = "Уважаемый " + userMention + ", вы не предоставили свой адрес электронной почты. Пожалуйста, сделайте это как можно скорее.";
-                    sendMessage(Long.valueOf(chatDescr.getChatId()), notificationText);                }
+                    // Пользователь не найден или не ввел email
+                    chatDescr.setEmailAccess("no");
+                    chatDescrRepository.save(chatDescr);
+                    LOG.info("Пользователь {} не ввел email после 1 минуты", userId);
+
+                } else {
+                    // Пользователь ввел email, обновляем статус
+                    chatDescr.setEmailAccess("yes");
+                    chatDescrRepository.save(chatDescr);
+                    LOG.info("Пользователь {} ввел email", userId);
+                }
             }
         }
     }

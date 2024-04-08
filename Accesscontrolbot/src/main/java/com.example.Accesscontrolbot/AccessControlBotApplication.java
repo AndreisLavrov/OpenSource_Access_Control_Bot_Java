@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
@@ -17,6 +18,7 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 
 @SpringBootApplication
+@EnableScheduling
 public class AccessControlBotApplication {
 
 	public static void main(String[] args) {
@@ -31,3 +33,4 @@ public class AccessControlBotApplication {
 		}
 	}
 }
+
