@@ -129,8 +129,11 @@ public class EmailVerificationService {
             }
 
             // 3. Send Notification Message
-            String notificationMessage = "Пользователь " + userId + " был выгнан из-за двух неуспешных попыток ввода кода верификации.";
-            sendResponse(Long.valueOf(associatedChatId), notificationMessage);
+//            String notificationMessage = "Пользователь " + userId + " был выгнан из-за двух неуспешных попыток ввода кода верификации.";
+//            sendResponse(Long.valueOf(associatedChatId), notificationMessage);
+
+            String mentionLink = String.format("[Пользователь был выгнан из-за двух неудачных попыток ввода кода верификации](tg://user?id=%s)", userId);
+            sendResponse(Long.valueOf(associatedChatId), mentionLink);
         } else {
             LOG.warn("Chat ID for user {} not found.", userId);
         }
@@ -140,6 +143,7 @@ public class EmailVerificationService {
         var sendMessage = new SendMessage();
         sendMessage.setChatId(chatId.toString());
         sendMessage.setText(text);
+        sendMessage.setParseMode("Markdown");
         try {
             bot.execute(sendMessage);
         } catch (TelegramApiException e) {

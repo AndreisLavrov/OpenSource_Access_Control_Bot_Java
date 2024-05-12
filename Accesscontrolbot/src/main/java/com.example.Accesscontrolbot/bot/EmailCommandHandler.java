@@ -1,5 +1,6 @@
 package com.example.Accesscontrolbot.bot;
 
+import com.example.Accesscontrolbot.model.ChatDescr;
 import com.example.Accesscontrolbot.model.User;
 import com.example.Accesscontrolbot.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import com.example.Accesscontrolbot.model.DomainsList;
+import com.example.Accesscontrolbot.repository.DomainsListRepository;
+import com.example.Accesscontrolbot.repository.ChatDescrRepository;
 
 
 import java.util.*;
@@ -20,11 +24,19 @@ public class EmailCommandHandler {
     private final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@([A-Za-z0-9.-]+\\.[A-Za-z]{2,6})$");
     private Timer emailTimer;
 
+    private final DomainsListRepository domainsListRepository;
+    private final ChatDescrRepository chatDescrRepository;
+
     @Autowired
-    public EmailCommandHandler(AdminBot bot, UserRepository userRepository) {
+    public EmailCommandHandler(AdminBot bot, UserRepository userRepository, DomainsListRepository domainsListRepository, ChatDescrRepository chatDescrRepository) {
         this.bot = bot;
         this.userRepository = userRepository;
+        this.domainsListRepository = domainsListRepository;
+        this.chatDescrRepository = chatDescrRepository;
     }
+
+
+
 
     private Map<Long, Timer> emailSessions = new HashMap<>();
     private final Map<Long, Boolean> userIsWaitingForEmail = new ConcurrentHashMap<>();
@@ -52,14 +64,48 @@ public class EmailCommandHandler {
             sessionTimer.cancel();
         }
         if (EMAIL_PATTERN.matcher(email).matches()) {
-//            var confirmationText = "Ваш электронный адрес успешно сохранен: " + email;
-//            sendMessage(chatId, confirmationText);
-            saveUser(chatId, email, username);
+            // Validate domain before saving
+//            saveUser(chatId, email, username);
+            // Find chat_id from ChatDescr using userId
+            String domain = email.substring(email.indexOf("@") + 1);  // Extract domain
+
+            // Find chat_id from ChatDescr using userId
+            String userId = chatId.toString();
+            Optional<ChatDescr> chatDescrOptional = chatDescrRepository.findByUserId(userId);
+
+            if (chatDescrOptional.isPresent()) {
+                ChatDescr chatDescr = chatDescrOptional.get();
+                Long chatIdFromDescr = Long.parseLong(chatDescr.getChatId());
+
+                // Find allowed domains from DomainsList using chatId
+                Optional<DomainsList> domainsListOptional = domainsListRepository.findByChatId(chatIdFromDescr);
+                if (domainsListOptional.isPresent()) {
+                    DomainsList domainsList = domainsListOptional.get();
+                    String allowedDomainsString = domainsList.getListOfDomains();
+
+                    // Validate domain
+                    if (allowedDomainsString.contains(domain)) {
+                        saveUser(chatId, email, username);
+                    } else {
+                        sendMessage(chatId, "Введенный домен не входит в список разрешенных для вашего чата. Пожалуйста, попробуйте еще раз.\n/email");
+                    }
+                } else {
+                    sendMessage(chatId, "Список разрешенных доменов не найден для этого чата.");
+                }
+//                // For Debugging/Logging: Print user and chat IDs
+//                System.out.println("User ID: " + userId);
+//                System.out.println("Chat ID: " + chatIdFromDescr);
+            } else {
+                sendMessage(chatId, "Информация о чате не найдена.");
+            }
         } else {
             var errorText = "Это не похоже на корректный электронный адрес. Пожалуйста, попробуйте еще раз.\n/email";
             sendMessage(chatId, errorText);
         }
     }
+
+
+
 
 
     private void saveUser(Long chatId, String email, String username) {

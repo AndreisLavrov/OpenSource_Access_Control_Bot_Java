@@ -13,10 +13,13 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.groupadministration.BanChatMember;
+import org.telegram.telegrambots.meta.api.methods.groupadministration.GetChatMember;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.chatmember.ChatMember;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -31,8 +34,11 @@ import org.telegram.telegrambots.meta.api.objects.ChatPermissions;
 import org.telegram.telegrambots.meta.api.objects.User;
 import com.example.Accesscontrolbot.model.ChatInfo;
 import com.example.Accesscontrolbot.model.ChatDescr;
+import com.example.Accesscontrolbot.model.DomainsList;
 import com.example.Accesscontrolbot.repository.ChatDescrRepository;
 import com.example.Accesscontrolbot.repository.UserRepository;
+import com.example.Accesscontrolbot.repository.DomainsListRepository;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,6 +79,10 @@ public class AdminBot extends TelegramLongPollingBot {
     @Lazy
     private UserRepository UserRepository;
 
+    @Autowired
+    @Lazy
+    private DomainsListRepository domainsListRepository;
+
     public AdminBot() {
         super();
     }
@@ -96,39 +106,83 @@ public class AdminBot extends TelegramLongPollingBot {
     private static final String EMAIL = "/email";
     private static final String VERIFICATION = "/verification";
 
+    private static final String DOMEN = "/domen";
+
     private final Map<Long, Boolean> userIsWaitingForEmail = new ConcurrentHashMap<>();
 
 
 
-    @Scheduled(fixedRate = 1 * 60 * 1000) // 5 minutes in milliseconds
+//    @Scheduled(fixedRate = 1 * 60 * 1000) // 1 minute in milliseconds
+//    public void checkUsersEmailEntry() {
+//        LocalDateTime now = LocalDateTime.now();
+//        List<ChatDescr> chatDescrList = chatDescrRepository.findAll();
+//
+//        for (ChatDescr chatDescr : chatDescrList) {
+//            if ("yes".equals(chatDescr.getEmailAccess())) {
+//                continue; // Пропускаем пользователей, которые уже ввели email
+//            }
+//
+//            LocalDateTime joinTime = chatDescr.getJoinTimeStamp();
+//            if (joinTime != null && Duration.between(joinTime, now).toMinutes() >= 5) {
+//                String userId = chatDescr.getUserId(); // user_id из chat_descr
+//
+//                Optional<com.example.Accesscontrolbot.model.User> userOptional = UserRepository.findByUsername(userId);
+//                // Поиск пользователя по username, который равен user_id
+//
+//                if (!userOptional.isPresent() || userOptional.get().getEmail() == null || userOptional.get().getEmail().isEmpty()) {
+//                    // Пользователь не найден или не ввел email
+//                    chatDescr.setEmailAccess("no");
+//                    chatDescrRepository.save(chatDescr);
+//                    Long chatIdToMention = Long.valueOf(chatDescr.getChatId());
+//                    String mentionLink = String.format("[Укажите пожалуйста ваш email в течении 12 часов или будете изгнаны из канала](tg://user?id=%s)", userId);
+//                    sendMessage(chatIdToMention, mentionLink);
+//                    LOG.info("Пользователь {} не ввел email после 1 минуты", userId);
+//
+//                } else {
+//                    // Пользователь ввел email, обновляем статус
+//                    chatDescr.setEmailAccess("yes");
+//                    chatDescrRepository.save(chatDescr);
+//                    LOG.info("Пользователь {} ввел email", userId);
+//                }
+//            }
+//        }
+//    }
+
+    @Scheduled(fixedRate = 10 * 60 * 1000)
     public void checkUsersEmailEntry() {
         LocalDateTime now = LocalDateTime.now();
         List<ChatDescr> chatDescrList = chatDescrRepository.findAll();
 
+
+
         for (ChatDescr chatDescr : chatDescrList) {
             if ("yes".equals(chatDescr.getEmailAccess())) {
-                continue; // Пропускаем пользователей, которые уже ввели email
+                continue; // Skip users who have already entered email
             }
 
             LocalDateTime joinTime = chatDescr.getJoinTimeStamp();
-            if (joinTime != null && Duration.between(joinTime, now).toMinutes() >= 5) {
-                String userId = chatDescr.getUserId(); // user_id из chat_descr
+            if (joinTime != null && Duration.between(joinTime, now).toHours() >= 24) {
+                String userId = chatDescr.getUserId();
+                Long chatIdToBlock = Long.valueOf(chatDescr.getChatId());
 
-                Optional<com.example.Accesscontrolbot.model.User> userOptional = UserRepository.findByUsername(userId);
-                // Поиск пользователя по username, который равен user_id
+                String notificationMessage = String.format("[Пользователь был выгнан, так как не указал свой email в течение 24 часов](tg://user?id=%s)", userId);
+                blockUser(chatIdToBlock, userId);
+                sendMessage(chatIdToBlock, notificationMessage);
+                chatDescrRepository.delete(chatDescr);
 
-                if (!userOptional.isPresent() || userOptional.get().getEmail() == null || userOptional.get().getEmail().isEmpty()) {
-                    // Пользователь не найден или не ввел email
-                    chatDescr.setEmailAccess("no");
-                    chatDescrRepository.save(chatDescr);
-                    LOG.info("Пользователь {} не ввел email после 1 минуты", userId);
 
-                } else {
-                    // Пользователь ввел email, обновляем статус
+            } else if (joinTime != null && Duration.between(joinTime, now).toHours() >= 12) {
+                // Send reminder message after 12 hours
+                chatDescr.setEmailAccess("no");
+                Long chatIdToMention = Long.valueOf(chatDescr.getChatId());
+                String userId = chatDescr.getUserId();
+                String mentionLink = String.format("[Укажите пожалуйста ваш email в течение 12 часов или будете выгнаны из канала](tg://user?id=%s)", userId);
+                sendMessage(chatIdToMention, mentionLink);
+                LOG.info("Пользователь {} не ввел email после 1 минуты", userId);
+            } else {
+//                 Пользователь ввел email, обновляем статус
                     chatDescr.setEmailAccess("yes");
                     chatDescrRepository.save(chatDescr);
-                    LOG.info("Пользователь {} ввел email", userId);
-                }
             }
         }
     }
@@ -154,6 +208,28 @@ public class AdminBot extends TelegramLongPollingBot {
 
         if (!update.hasMessage() || !update.getMessage().hasText()) {
             return;
+        }
+
+        if (update.hasMessage() && update.getMessage().hasText()) {
+            String messageText = update.getMessage().getText();
+            Long chatId = update.getMessage().getChatId();
+
+
+            if (messageText.startsWith(DOMEN)) {
+                if ("group".equals(update.getMessage().getChat().getType()) ||
+                        "supergroup".equals(update.getMessage().getChat().getType())) {
+
+                    // Check if user is an admin
+                    if (isAdmin(chatId, update.getMessage().getFrom().getId())) {
+                        // Process /domen command (implementation below)
+                        processDomenCommand(update.getMessage(), chatId);
+                    } else {
+                        sendMessage(chatId, "Only admins can use the /domen command.");
+                    }
+                } else {
+                    sendMessage(chatId, "The /domen command can only be used in groups.");
+                }
+            }
         }
 
         if (update.hasMessage() && ("group".equals(update.getMessage().getChat().getType()) || "supergroup".equals(update.getMessage().getChat().getType()) || "channel".equals(update.getMessage().getChat().getType()))) {
@@ -187,6 +263,9 @@ public class AdminBot extends TelegramLongPollingBot {
                 return;
             }
         }
+
+
+
 
         switch (message) {
             case START -> {
@@ -228,6 +307,8 @@ public class AdminBot extends TelegramLongPollingBot {
                     unrestrictUser(chatInfo.getChatId().toString(), userIdString);
                     chatInfoRepository.delete(chatInfo);
                 }, () -> LOG.warn("Chat ID для пользователя {} не найден.", userIdString));
+
+
 
 
 
@@ -329,6 +410,43 @@ public class AdminBot extends TelegramLongPollingBot {
 
     }
 
+    private boolean isAdmin(Long chatId, Long userId) {
+        try {
+            GetChatMember getChatMember = new GetChatMember();
+            getChatMember.setChatId(chatId.toString());
+            getChatMember.setUserId(userId);
+            ChatMember member = execute(getChatMember);
+            return member.getStatus().equals("administrator") || member.getStatus().equals("creator");
+        } catch (TelegramApiException e) {
+            LOG.error("Error checking admin status", e);
+            return false;
+        }
+    }
+
+
+
+    private void processDomenCommand(Message message, Long chatId) {
+        String messageText = message.getText().substring(DOMEN.length()).trim();
+        String[] domains = messageText.split("\\r?\\n");
+
+
+        String listOfDomains = String.join(",", domains); // Comma-separated list
+
+        DomainsList domainsList = domainsListRepository.findByChatId(chatId)
+                .orElseGet(() -> new DomainsList());
+
+        domainsList.setChatId(chatId);
+        domainsList.setListOfDomains(listOfDomains);
+
+        domainsListRepository.save(domainsList);
+
+        StringBuilder response = new StringBuilder("Domains updated:\n");
+        for (String domain : domains) {
+            response.append("- ").append(domain).append("\n");
+        }
+        sendMessage(chatId, response.toString());
+    }
+
 
     private void handleCallback(CallbackQuery callbackQuery) {
         Long chatId = callbackQuery.getMessage().getChatId();
@@ -341,9 +459,21 @@ public class AdminBot extends TelegramLongPollingBot {
         }
     }
 
+    private void blockUser(Long chatId, String userId) {
+        BanChatMember banChatMember = new BanChatMember();
+        banChatMember.setChatId(chatId.toString());
+        banChatMember.setUserId(Long.parseLong(userId));
+        try {
+            execute(banChatMember);
+        } catch (TelegramApiException e) {
+            LOG.error("Ошибка при блокировке пользователя", e);
+        }
+    }
+
     private void sendMessage(Long chatId, String text) {
         var chatIdStr = String.valueOf(chatId);
         var sendMessage = new SendMessage(chatIdStr, text);
+        sendMessage.setParseMode("Markdown");
         try {
             execute(sendMessage);
         } catch (TelegramApiException e) {
