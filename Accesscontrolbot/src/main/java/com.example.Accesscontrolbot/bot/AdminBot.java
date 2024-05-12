@@ -110,44 +110,6 @@ public class AdminBot extends TelegramLongPollingBot {
 
     private final Map<Long, Boolean> userIsWaitingForEmail = new ConcurrentHashMap<>();
 
-
-
-//    @Scheduled(fixedRate = 1 * 60 * 1000) // 1 minute in milliseconds
-//    public void checkUsersEmailEntry() {
-//        LocalDateTime now = LocalDateTime.now();
-//        List<ChatDescr> chatDescrList = chatDescrRepository.findAll();
-//
-//        for (ChatDescr chatDescr : chatDescrList) {
-//            if ("yes".equals(chatDescr.getEmailAccess())) {
-//                continue; // Пропускаем пользователей, которые уже ввели email
-//            }
-//
-//            LocalDateTime joinTime = chatDescr.getJoinTimeStamp();
-//            if (joinTime != null && Duration.between(joinTime, now).toMinutes() >= 5) {
-//                String userId = chatDescr.getUserId(); // user_id из chat_descr
-//
-//                Optional<com.example.Accesscontrolbot.model.User> userOptional = UserRepository.findByUsername(userId);
-//                // Поиск пользователя по username, который равен user_id
-//
-//                if (!userOptional.isPresent() || userOptional.get().getEmail() == null || userOptional.get().getEmail().isEmpty()) {
-//                    // Пользователь не найден или не ввел email
-//                    chatDescr.setEmailAccess("no");
-//                    chatDescrRepository.save(chatDescr);
-//                    Long chatIdToMention = Long.valueOf(chatDescr.getChatId());
-//                    String mentionLink = String.format("[Укажите пожалуйста ваш email в течении 12 часов или будете изгнаны из канала](tg://user?id=%s)", userId);
-//                    sendMessage(chatIdToMention, mentionLink);
-//                    LOG.info("Пользователь {} не ввел email после 1 минуты", userId);
-//
-//                } else {
-//                    // Пользователь ввел email, обновляем статус
-//                    chatDescr.setEmailAccess("yes");
-//                    chatDescrRepository.save(chatDescr);
-//                    LOG.info("Пользователь {} ввел email", userId);
-//                }
-//            }
-//        }
-//    }
-
     @Scheduled(fixedRate = 10 * 60 * 1000)
     public void checkUsersEmailEntry() {
         LocalDateTime now = LocalDateTime.now();
@@ -324,10 +286,13 @@ public class AdminBot extends TelegramLongPollingBot {
 
 
     private void helpCommand(Long chatId) {
-        var text = """
-                Пишите @andrei_lavrov
-                """;
-        sendMessage(chatId, text);
+        var text = "Пишите @andrei_lavrov";
+        var sendMessage = new SendMessage(String.valueOf(chatId), text);
+        try {
+            execute(sendMessage);
+        } catch (TelegramApiException e) {
+            LOG.error("Ошибка отправки сообщения", e);
+        }
     }
 
 
